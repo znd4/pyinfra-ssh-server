@@ -25,9 +25,9 @@ classifiers = [
 dependencies = ["pyinfra", "typer"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/pyinfra-ssh-server#readme"
-Issues = "https://github.com/unknown/pyinfra-ssh-server/issues"
-Source = "https://github.com/unknown/pyinfra-ssh-server"
+Documentation = "https://github.com/znd4/pyinfra-ssh-server#readme"
+Issues = "https://github.com/znd4/pyinfra-ssh-server/issues"
+Source = "https://github.com/znd4/pyinfra-ssh-server"
 
 [tool.hatch.version]
 path = "src/pyinfra_ssh_server/__about__.py"
