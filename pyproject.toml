@@ -22,7 +22,7 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["pyinfra"]
+dependencies = ["pyinfra", "typer"]
 
 [project.urls]
 Documentation = "https://github.com/unknown/pyinfra-ssh-server#readme"
@@ -30,7 +30,7 @@ Issues = "https://github.com/unknown/pyinfra-ssh-server/issues"
 Source = "https://github.com/unknown/pyinfra-ssh-server"
 
 [tool.hatch.version]
-path = "src/pyinfra_ssh_server_deploy/__about__.py"
+path = "src/pyinfra_ssh_server/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = ["coverage[toml]>=6.5", "pytest"]
@@ -47,7 +47,7 @@ python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 detached = true
 dependencies = ["black>=23.1.0", "mypy>=1.0.0", "ruff>=0.0.243"]
 [tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/pyinfra_ssh_server_deploy tests}"
+typing = "mypy --install-types --non-interactive {args:src/pyinfra_ssh_server tests}"
 style = ["ruff {args:.}", "black --check --diff {args:.}"]
 fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
 all = ["style", "typing"]
@@ -109,7 +109,7 @@ unfixable = [
 ]
 
 [tool.ruff.isort]
-known-first-party = ["pyinfra_ssh_server_deploy"]
+known-first-party = ["pyinfra_ssh_server"]
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -119,15 +119,15 @@ ban-relative-imports = "all"
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 
 [tool.coverage.run]
-source_pkgs = ["pyinfra_ssh_server_deploy", "tests"]
+source_pkgs = ["pyinfra_ssh_server", "tests"]
 branch = true
 parallel = true
-omit = ["src/pyinfra_ssh_server_deploy/__about__.py"]
+omit = ["src/pyinfra_ssh_server/__about__.py"]
 
 [tool.coverage.paths]
-pyinfra_ssh_server_deploy = [
-    "src/pyinfra_ssh_server_deploy",
-    "*/pyinfra-ssh-server/src/pyinfra_ssh_server_deploy",
+pyinfra_ssh_server = [
+    "src/pyinfra_ssh_server",
+    "*/pyinfra-ssh-server/src/pyinfra_ssh_server",
 ]
 tests = ["tests", "*/pyinfra-ssh-server/tests"]
 
