@@ -5,29 +5,29 @@ import io
 import pyinfra
 from pyinfra import host, facts, operations
 import pathlib
-from pyinfra.api import deploy
+from pyinfra.api import deploy, operation
 
 
-@deploy("Set up mDNS")
+@operation
 def mdns(*, hostname: str):
-    operations.apt.packages(
+    yield from operations.apt.packages(
         name="Install mDNS",
         packages=["avahi-daemon", "avahi-utils"],
         update=True,
     )
     hostname = host.data.get("hostname")
-    operations.server.shell([f"hostnamectl set-hostname {hostname}"])
-    operations.systemd.service("avahi-daemon", restarted=True)
+    yield from operations.server.shell([f"hostnamectl set-hostname {hostname}"])
+    yield from operations.systemd.service("avahi-daemon", restarted=True)
 
 
-@deploy("Install and configure ssh server")
+@operation
 def sshd(*, public_key: str = "", password_auth: bool = False):
-    sshd_install()
-    sshd_password_auth(enabled=password_auth)
-    sshd_known_hosts(public_key=public_key)
+    yield from sshd_install()
+    yield from sshd_password_auth(enabled=password_auth)
+    yield from sshd_known_hosts(public_key=public_key)
 
 
-@deploy("turn off password authentication")
+@operation
 def sshd_password_auth(*, enabled: bool):
     if enabled:
         line = "PasswordAuthentication no"
@@ -36,7 +36,7 @@ def sshd_password_auth(*, enabled: bool):
         line = "PasswordAuthentication yes"
         replace = "PasswordAuthentication no"
 
-    operations.files.line(
+    yield from operations.files.line(
         name="turn off password authentication",
         path="/etc/ssh/sshd_config",
         line=line,
@@ -44,22 +44,22 @@ def sshd_password_auth(*, enabled: bool):
     )
 
 
-@deploy("Install ssh server")
+@operation
 def sshd_install():
-    operations.apt.packages(
+    yield from operations.apt.packages(
         name="Install ssh server",
         packages=["openssh-server"],
         update=True,
     )
-    operations.systemd.service("ssh", restarted=True)
+    yield from operations.systemd.service("ssh", restarted=True)
 
 
-@deploy("Add ssh key to known_hosts")
+@operation
 def sshd_known_hosts(*, public_key: str):
     if not public_key:
         return
 
-    operations.files.put(
+    yield from operations.files.put(
         name="Add ssh key to known_hosts",
         src=io.StringIO(public_key),
         dest=pathlib.Path(host.get_fact(facts.server.Home)) / ".ssh" / "known_hosts",
